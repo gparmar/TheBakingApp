@@ -47,15 +47,6 @@ public class BakingProvider {
             return buildUri(Path.INGREDIENT, id);
         }
 
-        @InexactContentUri(
-                name = "INGREDIENT_RECIPE_ID",
-                path = Path.INGREDIENT + "/recipe/#",
-                type = "vnd.android.cursor.item/ingredient",
-                whereColumn = IngredientTable.RECIPE_ID,
-                pathSegment = 1)
-        public static Uri withRecipeId(String recipeId){
-            return buildUri(Path.INGREDIENT, recipeId);
-        }
     }
 
     @TableEndpoint(table = BakingDatabase.STEP)
@@ -75,15 +66,7 @@ public class BakingProvider {
         public static Uri withId(String id){
             return buildUri(Path.STEP, id);
         }
-        @InexactContentUri(
-                name = "STEP_RECIPE_ID",
-                path = Path.STEP + "/recipe/#",
-                type = "vnd.android.cursor.item/step",
-                whereColumn = StepTable.RECIPE_ID,
-                pathSegment = 1)
-        public static Uri withRecipeId(String recipeId){
-            return buildUri(Path.STEP, recipeId);
-        }
+
     }
 
     @TableEndpoint(table = BakingDatabase.RECIPE)

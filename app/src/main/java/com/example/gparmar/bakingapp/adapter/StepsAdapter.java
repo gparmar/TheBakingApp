@@ -68,6 +68,11 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
         return 0;
     }
 
+    public void setCursor(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
+    }
+
     class StepsViewHolder extends RecyclerView.ViewHolder {
         int mPosition;
         int mStepId;

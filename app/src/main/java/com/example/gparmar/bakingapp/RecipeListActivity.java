@@ -29,7 +29,6 @@ import com.example.gparmar.bakingapp.data.BakingProvider;
 import com.example.gparmar.bakingapp.data.IngredientTable;
 import com.example.gparmar.bakingapp.data.RecipeTable;
 import com.example.gparmar.bakingapp.data.StepTable;
-import com.example.gparmar.bakingapp.dummy.DummyContent;
 import com.example.gparmar.bakingapp.model.Ingredient;
 import com.example.gparmar.bakingapp.model.Recipe;
 import com.example.gparmar.bakingapp.model.Step;
@@ -54,7 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AppCompatActivity  {
+public class RecipeListActivity extends AppCompatActivity {
     private static final String TAG = "RecipeListActivity";
     private static final String STATE_INFO_RECIPES = "STATE_INFO_RECIPES";
 
@@ -169,7 +168,7 @@ public class RecipeListActivity extends AppCompatActivity  {
     private void renderRecipes(List<Recipe> rcps) {
         if (rcps != null && rcps.size() > 0) {
             cardContainer.removeAllViews();
-            for (Recipe rcp: rcps) {
+            for (Recipe rcp : rcps) {
                 View cardView = getLayoutInflater().inflate(R.layout.recipe_card, cardContainer, false);
                 TextView recipeName = (TextView) cardView.findViewById(R.id.recipe_name);
                 recipeName.setText(rcp.getName());
@@ -178,7 +177,9 @@ public class RecipeListActivity extends AppCompatActivity  {
                 cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(RecipeListActivity.this, "Recipe "+recipe.getId()+" was touched.", Toast.LENGTH_SHORT).show();
+                        Intent stepsIntent = new Intent(RecipeListActivity.this, RecipeStepsActivity.class);
+                        stepsIntent.putExtra(Constants.PROPERTY_RECIPES_ID, recipe.getId());
+                        startActivity(stepsIntent);
                     }
                 });
             }
