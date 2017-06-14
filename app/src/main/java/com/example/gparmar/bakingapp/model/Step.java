@@ -14,6 +14,7 @@ public class Step implements Parcelable {
     private String videoURL;
     private String thumbnailURL;
     private int recipeId;
+    private int stepNumber;
 
     public Step() {
     }
@@ -25,6 +26,7 @@ public class Step implements Parcelable {
         videoURL = in.readString();
         thumbnailURL = in.readString();
         recipeId = in.readInt();
+        stepNumber = in.readInt();
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
@@ -87,6 +89,14 @@ public class Step implements Parcelable {
         this.recipeId = recipeId;
     }
 
+    public int getStepNumber() {
+        return stepNumber;
+    }
+
+    public void setStepNumber(int stepNumber) {
+        this.stepNumber = stepNumber;
+    }
+
     @Override
     public String toString() {
         return "Step{" +
@@ -96,6 +106,7 @@ public class Step implements Parcelable {
                 ", videoURL='" + videoURL + '\'' +
                 ", thumbnailURL='" + thumbnailURL + '\'' +
                 ", recipeId=" + recipeId +
+                ", stepNumber=" + stepNumber +
                 '}';
     }
 
@@ -112,5 +123,6 @@ public class Step implements Parcelable {
         dest.writeString(videoURL);
         dest.writeString(thumbnailURL);
         dest.writeInt(recipeId);
+        dest.writeInt(stepNumber);
     }
 }

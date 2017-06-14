@@ -1,7 +1,5 @@
 package com.example.gparmar.bakingapp;
 
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,25 +12,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.gparmar.bakingapp.adapter.StepsAdapter;
+import com.example.gparmar.bakingapp.adapter.IngredientsAdapter;
 import com.example.gparmar.bakingapp.data.BakingProvider;
 import com.example.gparmar.bakingapp.data.StepTable;
-import com.example.gparmar.bakingapp.model.Step;
-import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 import com.example.gparmar.bakingapp.utilities.Constants;
 
 /**
  * Created by gparmar on 12/06/17.
  */
 
-public class RecipeStepsFragment extends Fragment {
-    private static final String TAG = "RecipeStepsFragment";
+public class RecipeIngredientsFragment extends Fragment {
+    private static final String TAG = "RecipeIngsFragment";
+    private static final String ARG_RECIPE_ID = "recipe_id";
     private int mRecipeId = -1;
-    private RecyclerView mStepsList;
-    private StepsAdapter mAdapter;
-    private StepsClickListener mListener;
+    private RecyclerView mIngredientsList;
+    private IngredientsAdapter mAdapter;
 
-    public RecipeStepsFragment() {
+    public RecipeIngredientsFragment() {
+    }
+
+    public static RecipeIngredientsFragment newInstance(int recipeId){
+        RecipeIngredientsFragment fragment =
+                new RecipeIngredientsFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_RECIPE_ID, recipeId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
@@ -41,27 +46,27 @@ public class RecipeStepsFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         Bundle args = getArguments();
         if (args != null) {
-            mRecipeId = args.getInt(Constants.PROPERTY_RECIPE_ID, -1);
+            mRecipeId = args.getInt(ARG_RECIPE_ID, -1);
         }
 
         View fragmentView
-                = inflater.inflate(R.layout.fragment_recipe_steps, container, false);
+                = inflater.inflate(R.layout.fragment_recipe_ingredients, container, false);
 
-        mStepsList = (RecyclerView) fragmentView.findViewById(R.id.steps_list);
+        mIngredientsList = (RecyclerView) fragmentView.findViewById(R.id.ingredients_list);
 
         Cursor cursor = getActivity().getContentResolver()
-                .query(BakingProvider.Step.CONTENT_URI,null,
+                .query(BakingProvider.Ingredient.CONTENT_URI,null,
                         StepTable.RECIPE_ID+"="+mRecipeId,null,null);
-        mAdapter = new StepsAdapter(cursor, mListener, mRecipeId);
-        mStepsList.setAdapter(mAdapter);
+        mAdapter = new IngredientsAdapter(cursor);
+        mIngredientsList.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mStepsList.setLayoutManager(layoutManager);
+        mIngredientsList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration
-                = new DividerItemDecoration(mStepsList.getContext(),
+                = new DividerItemDecoration(mIngredientsList.getContext(),
                 layoutManager.getOrientation());
-        mStepsList.addItemDecoration(dividerItemDecoration);
+        mIngredientsList.addItemDecoration(dividerItemDecoration);
 
         Log.d(TAG, "returning fragmentView");
         return fragmentView;
@@ -71,22 +76,8 @@ public class RecipeStepsFragment extends Fragment {
         Log.d(TAG, "Setting mRecipeId:"+mRecipeId);
         this.mRecipeId = mRecipeId;
         Cursor cursor = getActivity().getContentResolver()
-                .query(BakingProvider.Step.CONTENT_URI,null,
+                .query(BakingProvider.Ingredient.CONTENT_URI,null,
                         StepTable.RECIPE_ID+"="+mRecipeId,null,null);
-        CommonUtilities.putSharedPref(getActivity(),
-                Constants.PROPERTY_MAX_STEPS, cursor.getCount()+"");
-        mAdapter.setRecipeId(mRecipeId);
         mAdapter.setCursor(cursor);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof StepsClickListener) {
-            mListener = (StepsClickListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement StepsClickListener");
-        }
     }
 }

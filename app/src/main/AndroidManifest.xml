@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gparmar.bakingapp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -13,8 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".RecipeListActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,17 +24,22 @@
         <activity
             android:name=".RecipeStepsActivity"
             android:label="@string/title_recipe_steps"
-            android:parentActivityName=".RecipeListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".RecipeListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.gparmar.bakingapp.RecipeListActivity" />
         </activity>
-
+        <activity
+            android:name=".RecipeIngredientsActivity"
+            android:label="@string/title_recipe_ingredients" />
+        <activity android:name=".StepDetailActivity"
+            android:label="@string/step_detail_title"/>
         <provider
+            android:name=".data.generated.BakingProvider"
             android:authorities="com.example.gparmar.bakingapp.data.BakingProvider"
-            android:name="com.example.gparmar.bakingapp.data.generated.BakingProvider"
-            android:exported="false"/>
+            android:exported="false" />
+
+
     </application>
 
 </manifest>

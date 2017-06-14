@@ -1,30 +1,17 @@
 package com.example.gparmar.bakingapp;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.example.gparmar.bakingapp.data.BakingDatabase;
 import com.example.gparmar.bakingapp.data.BakingProvider;
 import com.example.gparmar.bakingapp.data.IngredientTable;
 import com.example.gparmar.bakingapp.data.RecipeTable;
@@ -45,14 +32,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * An activity representing a list of Steps. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link RecipeDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
+
 public class RecipeListActivity extends AppCompatActivity {
     private static final String TAG = "RecipeListActivity";
     private static final String STATE_INFO_RECIPES = "STATE_INFO_RECIPES";
@@ -113,6 +93,7 @@ public class RecipeListActivity extends AppCompatActivity {
                                     }
                                 }
                                 if (recipe.getSteps() != null) {
+                                    int count = 0;
                                     for (Step step : recipe.getSteps()) {
                                         ContentValues stepCV = new ContentValues();
                                         stepCV.put(StepTable.DESCRIPTION, step.getDescription());
@@ -120,7 +101,7 @@ public class RecipeListActivity extends AppCompatActivity {
                                         stepCV.put(StepTable.SHORT_DESCRIPTION, step.getShortDescription());
                                         stepCV.put(StepTable.VIDEO_URL, step.getVideoURL());
                                         stepCV.put(StepTable.THUMBNAIL_URL, step.getThumbnailURL());
-                                        stepCV.put(StepTable.STEP_NUMBER, step.getId());
+                                        stepCV.put(StepTable.STEP_NUMBER, count++);
                                         dbUri =
                                                 getContentResolver().insert(BakingProvider.Step.CONTENT_URI, stepCV);
                                         int stepId = Integer.parseInt(dbUri.getLastPathSegment());
@@ -178,7 +159,8 @@ public class RecipeListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent stepsIntent = new Intent(RecipeListActivity.this, RecipeStepsActivity.class);
-                        stepsIntent.putExtra(Constants.PROPERTY_RECIPES_ID, recipe.getId());
+                        stepsIntent.putExtra(Constants.PROPERTY_RECIPE_ID, recipe.getId());
+                        stepsIntent.putExtra(Constants.PROPERTY_RECIPE_NAME, recipe.getName());
                         startActivity(stepsIntent);
                     }
                 });

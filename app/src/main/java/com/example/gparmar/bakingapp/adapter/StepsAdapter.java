@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.gparmar.bakingapp.R;
+import com.example.gparmar.bakingapp.StepsClickListener;
 import com.example.gparmar.bakingapp.data.BakingProvider;
 import com.example.gparmar.bakingapp.data.StepTable;
 import com.example.gparmar.bakingapp.model.Step;
+import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 
 import java.util.List;
 
@@ -20,9 +22,15 @@ import java.util.List;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHolder> {
     private Cursor mCursor;
+    private StepsClickListener mStepsClickListener;
+    private int mRecipeId;
 
-    public StepsAdapter(Cursor cursor){
+    public StepsAdapter(Cursor cursor,
+                        StepsClickListener stepsClickListener,
+                        int recipeId){
         mCursor = cursor;
+        mStepsClickListener = stepsClickListener;
+        mRecipeId = recipeId;
     }
 
     @Override
@@ -35,29 +43,30 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     }
 
     @Override
-    public void onBindViewHolder(StepsViewHolder holder, int position) {
+    public void onBindViewHolder(StepsViewHolder holder, final int position) {
+        Step step = null;
         if (position == 0) {
+            step = new Step();
+            step.setRecipeId(mRecipeId);
             holder.mPosition = 0;
+            holder.mStepNumber.setText("0");
             holder.mStepDescription.setText("Recipe Ingredients");
         } else {
             mCursor.moveToPosition(position-1);
-            Step step = getStepFromCursor();
+            step = CommonUtilities.getStepFromCursor(mCursor);
             holder.mPosition = position;
+            holder.mStepNumber.setText((step.getStepNumber()+1)+"");
             holder.mStepDescription.setText(step.getShortDescription());
             holder.mRecipeId = step.getRecipeId();
             holder.mStepId = step.getId();
         }
-    }
-
-    private Step getStepFromCursor(){
-        Step step = new Step();
-        step.setDescription(mCursor.getString(mCursor.getColumnIndex(StepTable.DESCRIPTION)));
-        step.setShortDescription(mCursor.getString(mCursor.getColumnIndex(StepTable.SHORT_DESCRIPTION)));
-        step.setThumbnailURL(mCursor.getString(mCursor.getColumnIndex(StepTable.THUMBNAIL_URL)));
-        step.setVideoURL(mCursor.getString(mCursor.getColumnIndex(StepTable.VIDEO_URL)));
-        step.setId(mCursor.getInt(mCursor.getColumnIndex(StepTable._ID)));
-        step.setRecipeId(mCursor.getInt(mCursor.getColumnIndex(StepTable.RECIPE_ID)));
-        return step;
+        final Step finalStep = step;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStepsClickListener.onStepClicked(position, finalStep);
+            }
+        });
     }
 
     @Override
@@ -73,15 +82,21 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
         notifyDataSetChanged();
     }
 
+    public void setRecipeId(int mRecipeId) {
+        this.mRecipeId = mRecipeId;
+    }
+
     class StepsViewHolder extends RecyclerView.ViewHolder {
         int mPosition;
         int mStepId;
         int mRecipeId;
         TextView mStepDescription;
+        TextView mStepNumber;
 
         public StepsViewHolder(View itemView) {
             super(itemView);
             mStepDescription = (TextView) itemView.findViewById(R.id.step_description);
+            mStepNumber = (TextView) itemView.findViewById(R.id.step_number);
         }
     }
 }
