@@ -6,9 +6,6 @@
     <string name="recipes">Recipes</string>
     <string name="rcp_ingredients_title">Recipe Ingredients</string>
     <string name="recipe_steps_title">Recipe Steps</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prev_step"><![CDATA[< Prev Step]]></string>
     <string name="next_step"><![CDATA[Next Step >]]></string>
     <string name="step_detail_title">Step Details</string>

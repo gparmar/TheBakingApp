@@ -41,7 +41,6 @@ public class StepDetailFragment extends Fragment
      * @param step The step which this fragment will show.
      * @return A new instance of fragment StepDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static StepDetailFragment newInstance(Step step, int position) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
