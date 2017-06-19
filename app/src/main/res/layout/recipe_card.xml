@@ -12,6 +12,7 @@
     card_view:cardUseCompatPadding="true"
     android:clickable="true"
     android:background="?android:selectableItemBackground"
+    android:backgroundTint="@color/card_normal_background"
     >
     <TextView
         android:id="@+id/recipe_name"

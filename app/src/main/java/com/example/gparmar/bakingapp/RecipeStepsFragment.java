@@ -21,6 +21,9 @@ import com.example.gparmar.bakingapp.model.Step;
 import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 import com.example.gparmar.bakingapp.utilities.Constants;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by gparmar on 12/06/17.
  */
@@ -28,7 +31,8 @@ import com.example.gparmar.bakingapp.utilities.Constants;
 public class RecipeStepsFragment extends Fragment {
     private static final String TAG = "RecipeStepsFragment";
     private int mRecipeId = -1;
-    private RecyclerView mStepsList;
+    @BindView(R.id.steps_list)
+    RecyclerView mStepsList;
     private StepsAdapter mAdapter;
     private StepsClickListener mListener;
 
@@ -47,7 +51,7 @@ public class RecipeStepsFragment extends Fragment {
         View fragmentView
                 = inflater.inflate(R.layout.fragment_recipe_steps, container, false);
 
-        mStepsList = (RecyclerView) fragmentView.findViewById(R.id.steps_list);
+        ButterKnife.bind(this, fragmentView);
 
         Cursor cursor = getActivity().getContentResolver()
                 .query(BakingProvider.Step.CONTENT_URI,null,

@@ -16,6 +16,9 @@ import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by gparmar on 12/06/17.
  */
@@ -24,6 +27,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     private Cursor mCursor;
     private StepsClickListener mStepsClickListener;
     private int mRecipeId;
+    private int selectedPos = 0;
 
     public StepsAdapter(Cursor cursor,
                         StepsClickListener stepsClickListener,
@@ -43,7 +47,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     }
 
     @Override
-    public void onBindViewHolder(StepsViewHolder holder, final int position) {
+    public void onBindViewHolder(final StepsViewHolder holder, final int position) {
         Step step = null;
         if (position == 0) {
             step = new Step();
@@ -61,10 +65,14 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
             holder.mStepId = step.getId();
         }
         final Step finalStep = step;
+        holder.itemView.setSelected(selectedPos == position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mStepsClickListener.onStepClicked(position, finalStep);
+                notifyItemChanged(selectedPos);
+                selectedPos = position;
+                notifyItemChanged(selectedPos);
             }
         });
     }
@@ -90,13 +98,14 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
         int mPosition;
         int mStepId;
         int mRecipeId;
+        @BindView(R.id.step_description)
         TextView mStepDescription;
+        @BindView(R.id.step_number)
         TextView mStepNumber;
 
         public StepsViewHolder(View itemView) {
             super(itemView);
-            mStepDescription = (TextView) itemView.findViewById(R.id.step_description);
-            mStepNumber = (TextView) itemView.findViewById(R.id.step_number);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

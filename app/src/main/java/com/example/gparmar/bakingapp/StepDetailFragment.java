@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +17,42 @@ import com.example.gparmar.bakingapp.data.StepTable;
 import com.example.gparmar.bakingapp.model.Step;
 import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 import com.example.gparmar.bakingapp.utilities.Constants;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class StepDetailFragment extends Fragment
     implements View.OnClickListener{
+    private static final String TAG = "StepDetailFragment";
     private static final String ARG_STEP = "param_step";
     private static final String ARG_STEP_POSITION = "param_step_position";
 
     private Step mStep;
     private int mStepPosition;
-    private TextView description;
-    private Button prevStep;
-    private Button nextStep;
+    @BindView(R.id.description)
+    TextView description;
+    @BindView(R.id.prev_button)
+    Button prevStep;
+    @BindView(R.id.next_button)
+    Button nextStep;
+    @BindView(R.id.simple_video)
+    SimpleExoPlayerView playerView;
+    private SimpleExoPlayer player;
+    private boolean playWhenReady;
+    private int currentWindow;
+    private long playbackPosition;
 
     private OnFragmentInteractionListener mListener;
 
@@ -53,6 +78,7 @@ public class StepDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mStep = getArguments().getParcelable(ARG_STEP);
             mStepPosition = getArguments().getInt(ARG_STEP_POSITION);
@@ -64,9 +90,8 @@ public class StepDetailFragment extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
-        description = (TextView) view.findViewById(R.id.description);
-        prevStep = (Button) view.findViewById(R.id.prev_button);
-        nextStep = (Button) view.findViewById(R.id.next_button);
+
+        ButterKnife.bind(this, view);
         prevStep.setOnClickListener(this);
         nextStep.setOnClickListener(this);
         setupView();
@@ -80,7 +105,7 @@ public class StepDetailFragment extends Fragment
         } else {
             prevStep.setVisibility(View.VISIBLE);
         }
-        int maxSteps = Integer.parseInt(CommonUtilities.getSharedPref(getActivity(),
+        int maxSteps = Integer.parseInt(CommonUtilities.getSharedPref(getContext(),
                 Constants.PROPERTY_MAX_STEPS, "-1"));
         if (mStepPosition == (maxSteps-1)) {
             nextStep.setVisibility(View.GONE);
@@ -89,6 +114,28 @@ public class StepDetailFragment extends Fragment
         }
 
         description.setText(mStep.getDescription());
+    }
+
+    private void initializePlayer() {
+        Log.d(TAG, "initializePlayer");
+        player = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(getActivity()),
+                new DefaultTrackSelector(), new DefaultLoadControl());
+
+        playerView.setPlayer(player);
+
+        player.setPlayWhenReady(playWhenReady);
+        player.seekTo(currentWindow, playbackPosition);
+
+        Uri uri = Uri.parse(mStep.getVideoURL());
+        MediaSource mediaSource = buildMediaSource(uri);
+        player.prepare(mediaSource, true, false);
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        return new ExtractorMediaSource(uri,
+                new DefaultHttpDataSourceFactory("ua"),
+                new DefaultExtractorsFactory(), null, null);
     }
 
     @Override
@@ -109,6 +156,54 @@ public class StepDetailFragment extends Fragment
     }
 
     @Override
+    public void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+        //hideSystemUi();
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
+
+    private void releasePlayer() {
+        Log.d(TAG, "releasePlayer");
+        if (player != null) {
+            playbackPosition = player.getCurrentPosition();
+            currentWindow = player.getCurrentWindowIndex();
+            playWhenReady = player.getPlayWhenReady();
+            player.release();
+            player = null;
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         int newPosition = mStepPosition;
         //Step newStep = null;
@@ -126,6 +221,7 @@ public class StepDetailFragment extends Fragment
         mStepPosition = newPosition;
         mListener.setNewTitle(mStep.getShortDescription());
         setupView();
+        initializePlayer();
     }
 
     /**

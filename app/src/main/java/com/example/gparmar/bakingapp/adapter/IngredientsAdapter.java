@@ -14,6 +14,9 @@ import com.example.gparmar.bakingapp.data.StepTable;
 import com.example.gparmar.bakingapp.model.Ingredient;
 import com.example.gparmar.bakingapp.model.Step;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by gparmar on 12/06/17.
  */
@@ -66,15 +69,16 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
     }
 
     class IngredientsViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.ing_name)
         TextView mIngName;
+        @BindView(R.id.qty)
         TextView mQty;
+        @BindView(R.id.measure)
         TextView mMeasure;
 
         public IngredientsViewHolder(View itemView) {
             super(itemView);
-            mIngName = (TextView) itemView.findViewById(R.id.ing_name);
-            mQty = (TextView) itemView.findViewById(R.id.qty);
-            mMeasure = (TextView) itemView.findViewById(R.id.measure);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

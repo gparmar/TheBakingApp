@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import com.example.gparmar.bakingapp.model.Step;
 import com.example.gparmar.bakingapp.utilities.Constants;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by gparmar on 13/06/17.
  */
@@ -40,6 +42,17 @@ public class RecipeStepsActivity extends AppCompatActivity
         fragment.setRecipeId(recipeId);
 
         setTitle(recipeName + getString(R.string.recipe_suffix));
+
+        //Make ingredients fragment visible when it is landscape on tablet
+        View view = findViewById(R.id.step_detail_fragment);
+        if (view != null) {
+            Fragment ingredientsFragment = RecipeIngredientsFragment.newInstance(recipeId);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.step_detail_fragment, ingredientsFragment)
+                    .commit();
+        }
     }
 
     @Override
