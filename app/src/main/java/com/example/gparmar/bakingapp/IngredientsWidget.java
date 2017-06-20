@@ -30,10 +30,8 @@ public class IngredientsWidget extends AppWidgetProvider {
 
 
         Log.d(TAG, "Came into updateAppWidget ");
-        //CharSequence widgetText = IngredientsWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredients_widget);
-        views.setTextViewText(R.id.title, "Hello World");
 
         Intent svcIntent = new Intent(context, WidgetService.class);
         //svcIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId+RANDOM_NUMBER), null));
@@ -61,10 +59,7 @@ public class IngredientsWidget extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        // When the user deletes the widget, delete the preference associated with it.
-        for (int appWidgetId : appWidgetIds) {
-            IngredientsWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
-        }
+
     }
 
     @Override
