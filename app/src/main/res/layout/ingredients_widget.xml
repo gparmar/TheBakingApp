@@ -6,15 +6,16 @@
     android:padding="@dimen/general_padding">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         xmlns:tools="http://schemas.android.com/tools"
-        android:text="Yellow Cheese Cake"
+        android:text="@string/no_recipe_selected"
         android:gravity="center_horizontal"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_empty_view"
         android:textColor="@android:color/black"
-        android:layout_margin="@dimen/general_padding"/>
+        android:layout_margin="@dimen/general_padding"
+        android:visibility="gone"/>
     <ListView
         android:id="@+id/ingredients_list"
         android:layout_width="match_parent"

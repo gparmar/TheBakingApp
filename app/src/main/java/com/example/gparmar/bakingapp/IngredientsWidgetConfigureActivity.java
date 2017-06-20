@@ -28,7 +28,7 @@ public class IngredientsWidgetConfigureActivity extends Activity {
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            IngredientsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+            IngredientsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, false);
 
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();

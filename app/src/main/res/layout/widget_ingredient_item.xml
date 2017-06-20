@@ -3,19 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/general_padding">
+    android:padding="@dimen/general_padding"
+    android:background="@color/colorPrimary">
 
     <TextView android:id="@+id/ing_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         tools:text="@string/nutella"
         android:layout_weight="1"/>
     <TextView android:id="@+id/qty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:layout_marginRight="@dimen/horizontal_margin"/>
     <TextView android:id="@+id/measure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         />
 </LinearLayout>
