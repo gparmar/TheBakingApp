@@ -52,17 +52,21 @@ public class RecipeListAdapter extends
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Store the selected recipe id in shared preferences to be
+                //used by the widget to display its ingredients
                 CommonUtilities.putSharedPref(mContext,
                         Constants.PROPERTY_CURRENT_SELECTED_RECIPE_ID, recipe.getId());
+                //Send a broadcast to the widget to update the ingredients it
+                //is showing
                 AppWidgetManager man = AppWidgetManager.getInstance(mContext);
                 int[] ids = man.getAppWidgetIds(
                         new ComponentName(mContext,IngredientsWidget.class));
                 Intent updateIntent = new Intent();
                 updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                 updateIntent.putExtra(IngredientsWidget.WIDGET_IDS_KEY, ids);
-
                 mContext.sendBroadcast(updateIntent);
 
+                //Show the RecipeStepsActivity
                 Intent stepsIntent = new Intent(mContext, RecipeStepsActivity.class);
                 stepsIntent.putExtra(Constants.PROPERTY_RECIPE_ID, recipe.getId());
                 stepsIntent.putExtra(Constants.PROPERTY_RECIPE_NAME, recipe.getName());

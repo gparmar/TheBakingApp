@@ -15,4 +15,7 @@
     <string name="add_widget">Add widget</string>
     <string name="no_recipe_selected">No Recipe Selected</string>
     <string name="nutella">Nutella</string>
+    <string name="recipe_ingredients">Recipe Ingredients</string>
+    <string name="large_description_dummy">Large instruction of this step</string>
+    <string name="nutella_bar_dummy_text">Nutella Bar</string>
 </resources>

@@ -41,7 +41,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeListActivity extends AppCompatActivity {
     private static final String TAG = "RecipeListActivity";
-    private static final String STATE_INFO_RECIPES = "STATE_INFO_RECIPES";
 
     @BindView(R.id.card_list)
     RecyclerView mList;
@@ -71,6 +70,8 @@ public class RecipeListActivity extends AppCompatActivity {
                 Boolean.parseBoolean(CommonUtilities.getSharedPref(this,
                         Constants.PROPERTY_RECIPES_DOWNLOADED, "false"));
         if (!recipesDownloaded) {
+            //If the recipes are not downloaded from the server
+            //then download and store in the local database.
             Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.RECIPES_URL)
                     .addConverterFactory(GsonConverterFactory.create()).build();
             BakingDetailsService service = retrofit.create(BakingDetailsService.class);

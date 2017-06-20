@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    card_view:cardCornerRadius="5dp"
-    android:elevation="4dp"
-    card_view:contentPaddingTop="30dp"
-    card_view:contentPaddingBottom="30dp"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    android:elevation="@dimen/card_elevation"
+    card_view:contentPaddingTop="@dimen/card_top_padding"
+    card_view:contentPaddingBottom="@dimen/card_bottom_padding"
     card_view:cardUseCompatPadding="true"
     android:clickable="true"
     android:background="?android:selectableItemBackground"
@@ -18,7 +18,7 @@
         android:id="@+id/recipe_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Nutella Bar"
+        tools:text="@string/nutella_bar_dummy_text"
         android:layout_gravity="center_horizontal"
 
         />

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="left"
     android:background="@drawable/recipe_card_background"
+    android:padding="@dimen/general_padding"
     >
     <TextView android:id="@+id/step_number"
         android:layout_width="wrap_content"
@@ -21,7 +22,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Recipe Step Description"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         />
 </LinearLayout>

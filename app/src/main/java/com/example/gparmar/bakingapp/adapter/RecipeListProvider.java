@@ -18,12 +18,10 @@ import com.example.gparmar.bakingapp.utilities.Constants;
 /**
  * Created by gparmar on 19/06/17.
  */
-
 public class RecipeListProvider implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "RecipeListProvider";
     private Cursor mCursor;
     private Context mContext;
-    String[] ings = {"Mirchi", "Cocoa", "Maida", "Dhaniya", "Amla", "Khus-khus"};
 
     public RecipeListProvider(Context context, Cursor cursor) {
         mCursor = cursor;
@@ -72,8 +70,6 @@ public class RecipeListProvider implements RemoteViewsService.RemoteViewsFactory
         Ingredient ingredient = CommonUtilities.getIngredientFromCursor(mCursor);
         RemoteViews remoteView = new RemoteViews(mContext.getPackageName(),
                 R.layout.widget_ingredient_item);
-//        remoteView.setTextViewText(R.id.heading, ingredient.getIngredient());
-//        remoteView.setTextViewText(R.id.content, ingredient.getQuantity()+" "+ingredient.getMeasure());
         remoteView.setTextViewText(R.id.ing_name, ingredient.getIngredient());
         remoteView.setTextViewText(R.id.qty, ingredient.getQuantity()+"");
         remoteView.setTextViewText(R.id.measure, ingredient.getMeasure());

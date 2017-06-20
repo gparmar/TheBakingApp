@@ -17,13 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of App Widget functionality.
- * App Widget Configuration implemented in {@link IngredientsWidgetConfigureActivity IngredientsWidgetConfigureActivity}
+ * Created by gparmar on 19/06/17.
  */
 public class IngredientsWidget extends AppWidgetProvider {
     private static final String TAG = "IngredientsWidget";
     public static final String WIDGET_IDS_KEY = "mywidgetproviderwidgetids";
-    public static final int RANDOM_NUMBER = 35;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, boolean dataChanged) {
@@ -34,17 +32,16 @@ public class IngredientsWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredients_widget);
 
         Intent svcIntent = new Intent(context, WidgetService.class);
-        //svcIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId+RANDOM_NUMBER), null));
         views.setRemoteAdapter(R.id.ingredients_list, svcIntent);
         //setting an empty view in case of no data
         views.setEmptyView(R.id.ingredients_list, R.id.empty_view);
         if (dataChanged) {
             Log.d(TAG, "Came into updateAppWidget with dataChanged");
+            //If data is changed then to update the list we need to call this:
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.ingredients_list);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-
 
     }
 

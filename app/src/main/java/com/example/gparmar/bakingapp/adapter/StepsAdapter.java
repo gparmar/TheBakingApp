@@ -54,7 +54,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
             step.setRecipeId(mRecipeId);
             holder.mPosition = 0;
             holder.mStepNumber.setText("0");
-            holder.mStepDescription.setText("Recipe Ingredients");
+            holder.mStepDescription.setText(R.string.recipe_ingredients);
         } else {
             mCursor.moveToPosition(position-1);
             step = CommonUtilities.getStepFromCursor(mCursor);
