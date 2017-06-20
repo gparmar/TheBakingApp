@@ -13,6 +13,7 @@ import com.example.gparmar.bakingapp.data.IngredientTable;
 import com.example.gparmar.bakingapp.data.StepTable;
 import com.example.gparmar.bakingapp.model.Ingredient;
 import com.example.gparmar.bakingapp.model.Step;
+import com.example.gparmar.bakingapp.utilities.CommonUtilities;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,19 +41,10 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
     @Override
     public void onBindViewHolder(IngredientsViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        Ingredient ingredient = getIngredientFromCursor();
+        Ingredient ingredient = CommonUtilities.getIngredientFromCursor(mCursor);
         holder.mIngName.setText(ingredient.getIngredient());
         holder.mQty.setText(ingredient.getQuantity()+"");
         holder.mMeasure.setText(ingredient.getMeasure());
-    }
-
-    private Ingredient getIngredientFromCursor() {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setIngredient(mCursor.getString(mCursor.getColumnIndex(IngredientTable.INGREDIENT)));
-        ingredient.setMeasure(mCursor.getString(mCursor.getColumnIndex(IngredientTable.MEASURE)));
-        ingredient.setQuantity(mCursor.getInt(mCursor.getColumnIndex(IngredientTable.QUANTITY)));
-
-        return ingredient;
     }
 
     @Override

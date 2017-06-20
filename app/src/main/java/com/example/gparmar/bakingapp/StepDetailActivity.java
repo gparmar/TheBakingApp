@@ -1,5 +1,6 @@
 package com.example.gparmar.bakingapp;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,13 @@ public class StepDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
+
+        //If the view becomes landscape then exit this activity and
+        //let the landscape mode layout kick-in
+        if (getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE) {
+            finish();
+        }
 
         Step step = getIntent().getParcelableExtra(Constants.PROPERTY_STEP);
         int position = getIntent().getIntExtra(Constants.PROPERTY_STEP_POSITION, -1);

@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.gparmar.bakingapp.data.IngredientTable;
 import com.example.gparmar.bakingapp.data.RecipeTable;
 import com.example.gparmar.bakingapp.data.StepTable;
+import com.example.gparmar.bakingapp.model.Ingredient;
 import com.example.gparmar.bakingapp.model.Recipe;
 import com.example.gparmar.bakingapp.model.Step;
 
@@ -56,5 +58,14 @@ public class CommonUtilities {
         recipe.setServings(cursor.getInt(cursor.getColumnIndex(RecipeTable.SERVINGS)));
         Log.d(TAG, "Returning recipe:"+recipe);
         return recipe;
+    }
+
+    public static Ingredient getIngredientFromCursor(Cursor cursor) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredient(cursor.getString(cursor.getColumnIndex(IngredientTable.INGREDIENT)));
+        ingredient.setMeasure(cursor.getString(cursor.getColumnIndex(IngredientTable.MEASURE)));
+        ingredient.setQuantity(cursor.getInt(cursor.getColumnIndex(IngredientTable.QUANTITY)));
+
+        return ingredient;
     }
 }

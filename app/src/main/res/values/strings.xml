@@ -10,4 +10,7 @@
     <string name="next_step"><![CDATA[Next Step >]]></string>
     <string name="step_detail_title">Step Details</string>
     <string name="recipe_suffix">" Recipe"</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>

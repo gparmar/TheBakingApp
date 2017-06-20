@@ -141,7 +141,12 @@ public class RecipeListActivity extends AppCompatActivity {
     private void queryRecipes() {
         Cursor c = getContentResolver().query(BakingProvider.Recipe.CONTENT_URI,
                 null, null, null, null);
-        mAdapter.setCursor(c);
+        if (mAdapter == null) {
+            mAdapter = new RecipeListAdapter(this, null);
+            mList.setAdapter(mAdapter);
+        } else {
+            mAdapter.setCursor(c);
+        }
     }
 
 

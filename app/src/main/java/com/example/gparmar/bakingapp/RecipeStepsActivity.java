@@ -21,8 +21,10 @@ import butterknife.ButterKnife;
 public class RecipeStepsActivity extends AppCompatActivity
         implements StepsClickListener, StepDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "RecipeStepsActivity";
-
-
+    private static final String ARG_POSITION = "position";
+    private static final String ARG_STEP = "step";
+    private int mStepClicked = -1;
+    private Step mSelectedStep;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class RecipeStepsActivity extends AppCompatActivity
 
     @Override
     public void onStepClicked(int position, Step step) {
+        mStepClicked = position;
+        mSelectedStep = step;
         View view = findViewById(R.id.step_detail_fragment);
         //If view is not null then it is a tablet in landscape mode.
         if (view == null) {
@@ -76,6 +80,7 @@ public class RecipeStepsActivity extends AppCompatActivity
                 startActivity(intent);
             }
         } else {
+            setClickedPosition(position);
             if (position == 0) {
                 Fragment fragment = RecipeIngredientsFragment.newInstance(step.getRecipeId());
 
@@ -94,9 +99,46 @@ public class RecipeStepsActivity extends AppCompatActivity
         }
     }
 
+    private void setClickedPosition(int position){
+        RecipeStepsFragment recipeStepsFragment
+                = (RecipeStepsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.steps_fragment);
+        recipeStepsFragment.setPositionClicked(position);
+    }
+
     @Override
     public void setNewTitle(String title) {
         //This can be ignored as in a master-detail view we don't want the title to change.
         //The title change method is only for phone where master-detail view is not present.
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mStepClicked != -1) {
+            outState.putInt(ARG_POSITION, mStepClicked);
+            outState.putParcelable(ARG_STEP, mSelectedStep);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mStepClicked = savedInstanceState.getInt(ARG_POSITION);
+            mSelectedStep = (Step) savedInstanceState.getParcelable(ARG_STEP);
+
+            if (mStepClicked != -1 && mSelectedStep != null) {
+                onStepClicked(mStepClicked, mSelectedStep);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mStepClicked != -1) {
+            setClickedPosition(mStepClicked);
+        }
     }
 }

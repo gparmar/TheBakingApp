@@ -1,5 +1,6 @@
 package com.example.gparmar.bakingapp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,13 @@ public class RecipeIngredientsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_ingredients);
+
+        //If the view becomes landscape then exit this activity and
+        //let the landscape mode layout kick-in
+        if (getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE) {
+            finish();
+        }
 
         int recipeId = getIntent().getIntExtra(Constants.PROPERTY_RECIPE_ID, -1);
 

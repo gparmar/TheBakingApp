@@ -93,4 +93,9 @@ public class RecipeStepsFragment extends Fragment {
                     + " must implement StepsClickListener");
         }
     }
+
+
+    public void setPositionClicked(int position){
+        mAdapter.setSelectedPos(position);
+    }
 }

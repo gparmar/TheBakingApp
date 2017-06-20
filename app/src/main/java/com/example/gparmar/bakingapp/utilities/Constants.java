@@ -9,6 +9,7 @@ public interface Constants {
 
     String PROPERTY_RECIPES_DOWNLOADED = "PROPERTY_RECIPES_DOWNLOADED";
     String PROPERTY_RECIPE_ID = "recipe_id";
+    String PROPERTY_CURRENT_SELECTED_RECIPE_ID = "current_selected_recipe_id";
     String PROPERTY_RECIPE_NAME = "recipe_name";
     String PROPERTY_STEP = "step";
     String PROPERTY_STEP_POSITION = "step_position";

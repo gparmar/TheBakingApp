@@ -85,6 +85,11 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
         return 0;
     }
 
+    public void setSelectedPos(int selectedPos) {
+        this.selectedPos = selectedPos;
+        notifyDataSetChanged();
+    }
+
     public void setCursor(Cursor cursor) {
         mCursor = cursor;
         notifyDataSetChanged();

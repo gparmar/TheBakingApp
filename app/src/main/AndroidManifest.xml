@@ -32,14 +32,32 @@
         <activity
             android:name=".RecipeIngredientsActivity"
             android:label="@string/title_recipe_ingredients" />
-        <activity android:name=".StepDetailActivity"
-            android:label="@string/step_detail_title"/>
+        <activity
+            android:name=".StepDetailActivity"
+            android:label="@string/step_detail_title" />
+
         <provider
             android:name=".data.generated.BakingProvider"
             android:authorities="com.example.gparmar.bakingapp.data.BakingProvider"
             android:exported="false" />
 
+        <receiver android:name=".IngredientsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ingredients_widget_info" />
+        </receiver>
+        <service android:name=".service.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
+        <activity android:name=".IngredientsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
