@@ -31,12 +31,28 @@ import butterknife.ButterKnife;
 public class RecipeStepsFragment extends Fragment {
     private static final String TAG = "RecipeStepsFragment";
     private int mRecipeId = -1;
+    private int mStepPosition = -1;
     @BindView(R.id.steps_list)
     RecyclerView mStepsList;
     private StepsAdapter mAdapter;
     private StepsClickListener mListener;
 
     public RecipeStepsFragment() {
+    }
+
+    public static RecipeStepsFragment newInstance(int recipeId, int stepPosition) {
+        RecipeStepsFragment fragment = new RecipeStepsFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.PROPERTY_RECIPE_ID, recipeId);
+        if (stepPosition != -1) {
+            args.putInt(Constants.PROPERTY_STEP_POSITION, stepPosition);
+        }
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static RecipeStepsFragment newInstance(int recipeId) {
+        return newInstance(recipeId, -1);
     }
 
     @Nullable
@@ -46,6 +62,7 @@ public class RecipeStepsFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             mRecipeId = args.getInt(Constants.PROPERTY_RECIPE_ID, -1);
+            mStepPosition = args.getInt(Constants.PROPERTY_STEP_POSITION, -1);
         }
 
         View fragmentView
@@ -61,6 +78,10 @@ public class RecipeStepsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mStepsList.setLayoutManager(layoutManager);
+
+        if (mStepPosition != -1) {
+            mAdapter.setSelectedPos(mStepPosition);
+        }
 
         DividerItemDecoration dividerItemDecoration
                 = new DividerItemDecoration(mStepsList.getContext(),

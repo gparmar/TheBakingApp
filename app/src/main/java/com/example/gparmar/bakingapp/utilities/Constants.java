@@ -13,5 +13,8 @@ public interface Constants {
     String PROPERTY_RECIPE_NAME = "recipe_name";
     String PROPERTY_STEP = "step";
     String PROPERTY_STEP_POSITION = "step_position";
+    String PROPERTY_VIDEO_POSITION = "video_position";
+    String STEP_FRAGMENT_SHOWING = "step_fragment_showing";
+    String STEP_DETAIL_FRAGMENT_SHOWING = "step_detail_fragment_showing";
     String PROPERTY_MAX_STEPS = "max_steps";
 }

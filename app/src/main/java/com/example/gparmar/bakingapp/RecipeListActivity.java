@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.gparmar.bakingapp.adapter.RecipeListAdapter;
@@ -131,6 +132,9 @@ public class RecipeListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<List<Recipe>> call, Throwable t) {
                     Log.e(TAG, "Exception while querying the Baking Url", t);
+                    Toast.makeText(RecipeListActivity.this,
+                            R.string.chk_internet, Toast.LENGTH_LONG)
+                            .show();
                 }
             });
         } else {

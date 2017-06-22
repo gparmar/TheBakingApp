@@ -2,14 +2,19 @@ package com.example.gparmar.bakingapp;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.gparmar.bakingapp.data.BakingProvider;
@@ -28,16 +33,22 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class StepDetailFragment extends Fragment
-    implements View.OnClickListener{
+        implements View.OnClickListener {
     private static final String TAG = "StepDetailFragment";
     private static final String ARG_STEP = "param_step";
     private static final String ARG_STEP_POSITION = "param_step_position";
+    private static final String ARG_VIDEO_POSITION = "param_video_position";
 
     private Step mStep;
     private int mStepPosition;
@@ -49,6 +60,10 @@ public class StepDetailFragment extends Fragment
     Button nextStep;
     @BindView(R.id.simple_video)
     SimpleExoPlayerView playerView;
+    @BindView(R.id.thumbnail)
+    ImageView thumbnail;
+    @BindView(R.id.no_preview)
+    View noPreviewAvailable;
     private SimpleExoPlayer player;
     private boolean playWhenReady;
     private int currentWindow;
@@ -66,11 +81,14 @@ public class StepDetailFragment extends Fragment
      * @param step The step which this fragment will show.
      * @return A new instance of fragment StepDetailFragment.
      */
-    public static StepDetailFragment newInstance(Step step, int position) {
+    public static StepDetailFragment newInstance(Step step,
+                                                 int position,
+                                                 long videoPosition) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_STEP, step);
         args.putInt(ARG_STEP_POSITION, position);
+        args.putLong(ARG_VIDEO_POSITION, videoPosition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,6 +100,7 @@ public class StepDetailFragment extends Fragment
         if (getArguments() != null) {
             mStep = getArguments().getParcelable(ARG_STEP);
             mStepPosition = getArguments().getInt(ARG_STEP_POSITION);
+            playbackPosition = getArguments().getLong(ARG_VIDEO_POSITION);
         }
     }
 
@@ -94,12 +113,13 @@ public class StepDetailFragment extends Fragment
         ButterKnife.bind(this, view);
         prevStep.setOnClickListener(this);
         nextStep.setOnClickListener(this);
+
         setupView();
 
         return view;
     }
 
-    private void setupView(){
+    private void setupView() {
         if (mStepPosition == 0) {
             prevStep.setVisibility(View.GONE);
         } else {
@@ -107,13 +127,14 @@ public class StepDetailFragment extends Fragment
         }
         int maxSteps = Integer.parseInt(CommonUtilities.getSharedPref(getContext(),
                 Constants.PROPERTY_MAX_STEPS, "-1"));
-        if (mStepPosition == (maxSteps-1)) {
+        if (mStepPosition == (maxSteps - 1)) {
             nextStep.setVisibility(View.GONE);
         } else {
             nextStep.setVisibility(View.VISIBLE);
         }
 
         description.setText(mStep.getDescription());
+
     }
 
     private void initializePlayer() {
@@ -130,6 +151,9 @@ public class StepDetailFragment extends Fragment
         Uri uri = Uri.parse(mStep.getVideoURL());
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
+        if (playbackPosition > 0) {
+            player.seekTo(playbackPosition);
+        }
     }
 
     private MediaSource buildMediaSource(Uri uri) {
@@ -155,12 +179,34 @@ public class StepDetailFragment extends Fragment
         mListener = null;
     }
 
+    private void setupVideo() {
+        if (!TextUtils.isEmpty(mStep.getVideoURL())) {
+            initializePlayer();
+            playerView.setVisibility(View.VISIBLE);
+            thumbnail.setVisibility(View.GONE);
+            noPreviewAvailable.setVisibility(View.GONE);
+        } else {
+            playerView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(mStep.getThumbnailURL())) {
+                URL url = null;
+                Picasso.with(getContext()).load(mStep.getThumbnailURL()).into(thumbnail);
+                playerView.setVisibility(View.GONE);
+                thumbnail.setVisibility(View.VISIBLE);
+                noPreviewAvailable.setVisibility(View.GONE);
+            } else {
+                playerView.setVisibility(View.GONE);
+                thumbnail.setVisibility(View.GONE);
+                noPreviewAvailable.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     @Override
     public void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
         if (Util.SDK_INT > 23) {
-            initializePlayer();
+            setupVideo();
         }
     }
 
@@ -170,7 +216,7 @@ public class StepDetailFragment extends Fragment
         super.onResume();
         //hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null)) {
-            initializePlayer();
+            setupVideo();
         }
     }
 
@@ -178,7 +224,7 @@ public class StepDetailFragment extends Fragment
     public void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
-        if (Util.SDK_INT <= 23) {
+        if (Util.SDK_INT <= 23 && player != null) {
             releasePlayer();
         }
     }
@@ -187,7 +233,7 @@ public class StepDetailFragment extends Fragment
     public void onStop() {
         Log.d(TAG, "onStop");
         super.onStop();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT > 23 && player != null) {
             releasePlayer();
         }
     }
@@ -196,6 +242,7 @@ public class StepDetailFragment extends Fragment
         Log.d(TAG, "releasePlayer");
         if (player != null) {
             playbackPosition = player.getCurrentPosition();
+            ((VideoPositionListener)getContext()).setVideoPosition(playbackPosition);
             currentWindow = player.getCurrentWindowIndex();
             playWhenReady = player.getPlayWhenReady();
             player.release();
@@ -214,14 +261,14 @@ public class StepDetailFragment extends Fragment
         }
         Cursor cursor = getContext().getContentResolver().query(BakingProvider.Step.CONTENT_URI,
                 null,
-                StepTable.STEP_NUMBER+"="+newPosition+" and "+StepTable.RECIPE_ID+"="+mStep.getRecipeId(),
-                null,null);
+                StepTable.STEP_NUMBER + "=" + newPosition + " and " + StepTable.RECIPE_ID + "=" + mStep.getRecipeId(),
+                null, null);
         cursor.moveToFirst();
         mStep = CommonUtilities.getStepFromCursor(cursor);
         mStepPosition = newPosition;
         mListener.setNewTitle(mStep.getShortDescription());
         setupView();
-        initializePlayer();
+        setupVideo();
     }
 
     /**

@@ -32,9 +32,6 @@
         <activity
             android:name=".RecipeIngredientsActivity"
             android:label="@string/title_recipe_ingredients" />
-        <activity
-            android:name=".StepDetailActivity"
-            android:label="@string/step_detail_title" />
 
         <provider
             android:name=".data.generated.BakingProvider"

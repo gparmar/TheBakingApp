@@ -18,4 +18,6 @@
     <string name="recipe_ingredients">Recipe Ingredients</string>
     <string name="large_description_dummy">Large instruction of this step</string>
     <string name="nutella_bar_dummy_text">Nutella Bar</string>
+    <string name="no_video_available">No video or thumbnail available for this step.</string>
+    <string name="chk_internet">Could not get recipes. Please check your internet.</string>
 </resources>

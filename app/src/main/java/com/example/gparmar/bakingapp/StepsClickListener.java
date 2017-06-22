@@ -7,5 +7,5 @@ import com.example.gparmar.bakingapp.model.Step;
  */
 
 public interface StepsClickListener {
-    void onStepClicked(int position, Step step);
+    void onStepClicked(int position, Step step, boolean updateClickedPositionInFragment);
 }

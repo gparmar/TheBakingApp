@@ -69,7 +69,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStepsClickListener.onStepClicked(position, finalStep);
+                mStepsClickListener.onStepClicked(position, finalStep, false);
                 notifyItemChanged(selectedPos);
                 selectedPos = position;
                 notifyItemChanged(selectedPos);

@@ -30,7 +30,7 @@ public class CommonUtilities {
         SharedPreferences prefs = context.getSharedPreferences("TheBakingApp", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(name, object.toString());
-        editor.commit();
+        editor.apply();
     }
 
     public static String getSharedPref(Context context, String name, String defaultVal) {
